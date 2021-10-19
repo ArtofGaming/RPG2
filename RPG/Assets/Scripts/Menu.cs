@@ -96,6 +96,7 @@ public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
     void UpdateLobbyUI()
     {
         startGameButton.interactable = PhotonNetwork.IsMasterClient;
+        playerListText.text = "";
         foreach(Player player in PhotonNetwork.PlayerList)
         {
             playerListText.text += player.NickName + "\n";
@@ -107,6 +108,7 @@ public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
     {
         UpdateLobbyUI();
     }
+
     public void OnStartGameButton()
     {
         PhotonNetwork.CurrentRoom.IsOpen = false;

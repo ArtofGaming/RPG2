@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviourPun
     void Start()
     {
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
-        players = new PlayerController[PhotonNetwork.PlayerList.Length];
+        players = new PlayerController[8];
     }
 
     // Update is called once per frame
@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviourPun
     void ImInGame()
     {
         playersInGame++;
-        if(playersInGame == PhotonNetwork.PlayerList.Length)
+        if(playersInGame <= PhotonNetwork.PlayerList.Length)
         {
             SpawnPlayer();
         }

@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviourPun
     public Animator weaponAnim;
 
     public static PlayerController me;
+    public HeaderInfo headerInfo;
     // Start is called before the first frame update
     void Start()
     {
@@ -74,7 +75,8 @@ public class PlayerController : MonoBehaviourPun
         RaycastHit2D hit = Physics2D.Raycast(transform.position + dir, dir, attackRange);
         if(hit.collider != null && hit.collider.gameObject.CompareTag("Enemy"))
         {
-
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            enemy.photonView.RPC("TakeDamage", RpcTarget.MasterClient, damage);
         }
         weaponAnim.SetTrigger("Attack");
     }
@@ -82,6 +84,7 @@ public class PlayerController : MonoBehaviourPun
     public void TakeDamage(int damage)
     {
         curHp -= damage;
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
         if(curHp <= 0)
         {
             Die();
@@ -113,12 +116,16 @@ public class PlayerController : MonoBehaviourPun
         transform.position = spawnPos;
         curHp = maxHp;
         rig.isKinematic = false;
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }
     [PunRPC]
     public void Initialize(Player player)
     {
-        GameManager.instance.players[id - 1] = this;
+        
+        headerInfo.Initialize(player.NickName, maxHp);
         id = player.ActorNumber;
+
+        
         photonPlayer = player;
         if (player.IsLocal)
         {
@@ -128,15 +135,19 @@ public class PlayerController : MonoBehaviourPun
         {
             rig.isKinematic = true;
         }
+        
+        GameManager.instance.players[id-1] = this;
     }
     [PunRPC]
     void Heal (int amountToHeal)
     {
         curHp = Mathf.Clamp(curHp + amountToHeal, 0, maxHp);
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }
     [PunRPC]
     void GiveGold(int goldToGive)
     {
         gold += goldToGive;
+        GameUI.instance.UpdateGoldText(gold);
     }
 }

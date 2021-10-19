@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using Photon.Pun;
+
+public class HeaderInfo : MonoBehaviourPun
+{
+    public TextMeshProUGUI nameText;
+    public Image bar;
+    public float maxValue;
+
+    public void Initialize(string text, int maxVal)
+    {
+        nameText.text = text;
+        maxValue = maxVal;
+        bar.fillAmount = 1.0f;
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    [PunRPC]
+    void UpdateHealthBar (int value)
+    {
+        bar.fillAmount = (float)value / maxValue;
+    }
+}
