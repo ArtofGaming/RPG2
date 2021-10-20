@@ -30,11 +30,6 @@ public class PlayerController : MonoBehaviourPun
 
     public static PlayerController me;
     public HeaderInfo headerInfo;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
@@ -47,6 +42,7 @@ public class PlayerController : MonoBehaviourPun
 
         if(Input.GetMouseButtonDown(0) && Time.time - lastAttackTime > attackRate)
         {
+            
             Attack();
         }
 
@@ -73,8 +69,10 @@ public class PlayerController : MonoBehaviourPun
         lastAttackTime = Time.time;
         Vector3 dir = (Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position)).normalized;
         RaycastHit2D hit = Physics2D.Raycast(transform.position + dir, dir, attackRange);
-        if(hit.collider != null && hit.collider.gameObject.CompareTag("Enemy"))
+        Debug.Log(hit.collider);
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("attacked");
             Enemy enemy = hit.collider.GetComponent<Enemy>();
             enemy.photonView.RPC("TakeDamage", RpcTarget.MasterClient, damage);
         }
@@ -121,12 +119,12 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     public void Initialize(Player player)
     {
-        
-        headerInfo.Initialize(player.NickName, maxHp);
         id = player.ActorNumber;
-
         
         photonPlayer = player;
+        Debug.Log(GameManager.instance);
+        GameManager.instance.players[id - 1] = this;
+        
         if (player.IsLocal)
         {
             me = this;
@@ -135,8 +133,8 @@ public class PlayerController : MonoBehaviourPun
         {
             rig.isKinematic = true;
         }
-        
-        GameManager.instance.players[id-1] = this;
+        headerInfo.Initialize(player.NickName, maxHp);
+
     }
     [PunRPC]
     void Heal (int amountToHeal)

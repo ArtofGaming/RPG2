@@ -2426,7 +2426,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 1
+  sceneViewId: 20
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1 &1269768243
@@ -3033,7 +3033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e937a5817f30dc643984f2b2ec37a802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayers: 0
+  maxPlayers: 10
 --- !u!114 &1552166425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3053,7 +3053,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 7
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1 &1555472747

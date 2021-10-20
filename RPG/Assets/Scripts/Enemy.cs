@@ -33,10 +33,13 @@ public class Enemy : MonoBehaviourPun
     public SpriteRenderer sr;
     public Rigidbody2D rig;
 
+    public EnemySpawner enemySpawner;
+
     // Start is called before the first frame update
     void Start()
     {
         healthBar.Initialize(enemyName, maxHp);
+        enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
     }
 
     // Update is called once per frame
@@ -48,9 +51,11 @@ public class Enemy : MonoBehaviourPun
         }
         if (targetPlayer != null)
         {
+            
             float dist = Vector3.Distance(transform.position, targetPlayer.transform.position);
             if(dist < attackRange && Time.time - lastAttackTime >= attackRange)
             {
+                Debug.Log("enemy attacked");
                 Attack();
             }
             else if(dist > attackRange)
@@ -68,6 +73,7 @@ public class Enemy : MonoBehaviourPun
 
     void Attack()
     {
+        
         lastAttackTime = Time.time;
         targetPlayer.photonView.RPC("TakeDamage", targetPlayer.photonPlayer, damage);
     }
@@ -128,8 +134,13 @@ public class Enemy : MonoBehaviourPun
     {
         if(objectToSpawnOnDeath != string.Empty)
         {
+            if(enemySpawner.enemyPrefabPath == "Enemy 1")
+            {
+                objectToSpawnOnDeath = "TreasurePickup";
+            }
             PhotonNetwork.Instantiate(objectToSpawnOnDeath, transform.position, Quaternion.identity);
             PhotonNetwork.Destroy(gameObject);
+            enemySpawner.enemiesDefeated += 1;
         }
     }
 }

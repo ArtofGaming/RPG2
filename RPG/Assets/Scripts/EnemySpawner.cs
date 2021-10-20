@@ -12,6 +12,8 @@ public class EnemySpawner : MonoBehaviourPun
 
     private float lastSpawnCheckTime;
     private List<GameObject> curEnemies = new List<GameObject>();
+    
+    public int enemiesDefeated = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +48,23 @@ public class EnemySpawner : MonoBehaviourPun
             return;
         }
         Vector3 randomInCircle = Random.insideUnitCircle * spawnRadius;
-        GameObject enemy = PhotonNetwork.Instantiate(enemyPrefabPath, transform.position + randomInCircle, Quaternion.identity);
-        curEnemies.Add(enemy);
+
+        if(enemiesDefeated < 8)
+        {
+            GameObject enemy = PhotonNetwork.Instantiate(enemyPrefabPath, transform.position + randomInCircle, Quaternion.identity);
+            curEnemies.Add(enemy);
+        }
+        else
+        {
+            enemyPrefabPath = "Enemy 1";
+            GameObject enemy = PhotonNetwork.Instantiate(enemyPrefabPath, transform.position + randomInCircle, Quaternion.identity);
+            curEnemies.Add(enemy);
+        }
+        
+       
+
+
+
+        
     }
 }
